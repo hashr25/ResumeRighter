@@ -9,9 +9,8 @@ https://docs.djangoproject.com/en/5.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.1/ref/settings/
 """
-
+import os
 from pathlib import Path
-from decouple import config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -119,8 +118,8 @@ STATICFILES_DIRS = []
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-OPENAI_API_KEY = config("OPENAI_API_KEY", default="")
-EXTRA_DETAILS_FOR_RESUME_GENERATION = config(
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", default="")
+EXTRA_DETAILS_FOR_RESUME_GENERATION = os.environ.get(
     "EXTRA_DETAILS_FOR_RESUME_GENERATION",
     default="bogus stuff",
 )

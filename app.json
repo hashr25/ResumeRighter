@@ -1,0 +1,20 @@
+{
+  "name": "Resume Righter",
+  "description": "A pseudo terminal application using GPT-4 AI LLM to tailor your resume for a specific job description.",
+  "repository": "https://github.com/hashr25/ResumeRighter",
+  "website": "https://randys-resume-righter-fb0e16bff93a.herokuapp.com/",
+  "keywords": ["python", "django"],
+  "env": {
+    "DJANGO_SECRET_KEY": {
+      "description": "The secret key for the Django application.",
+      "generator": "secret"
+    }
+  },
+  "environments": {
+    "test": {
+      "scripts": {
+        "test": "./manage.py test --debug-mode"
+      }
+    }
+  }
+}
