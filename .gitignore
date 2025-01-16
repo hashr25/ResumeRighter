@@ -2,3 +2,10 @@
 .venv/*
 
 .env
+
+.idea
+.idea/*
+
+db.sqlite3
+
+*pycache*

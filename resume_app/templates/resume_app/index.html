@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Resume Righter - Terminal</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'resume_app/css/index.css' %}">
+    <link rel="icon" href="{% static 'resume_app/images/favicon.ico' %}" type="image/x-icon">
+</head>
+<body>
+    <div class="terminal">
+        {% csrf_token %}
+        <div id="output" class="output"></div>
+        <div id="input-area">
+            <span class="prompt">> </span>
+            <input type="text" id="terminal-input" autofocus>
+        </div>
+    </div>
+    <footer>
+        <p>
+            Resume Righter was written by Randy Hash and can be found on his
+            <a href="https://www.github.com/hashr25" target="_blank">GitHub</a>.
+        </p>
+    </footer>
+    <script src="{% static 'resume_app/js/index.js' %}"></script>
+</body>
+</html>
