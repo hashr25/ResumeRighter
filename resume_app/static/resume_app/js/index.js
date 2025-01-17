@@ -1,15 +1,15 @@
 document.addEventListener("DOMContentLoaded", () => {
     const steps = [
-        { message: "Welcome to the Resume Righter Terminal!", action: null },
+        {message: "Welcome to the Resume Righter Terminal!", action: null},
         {
             message: "This application will help you take your resume and tailor it to the job listing that you are applying for!",
             action: null,
         },
-        { message: "Step 1: Please upload your resume file.", action: "file" },
-        { message: "Step 2: Enter the job posting URL.", action: "url" },
-        { message: "Step 3: Add any special considerations (or press Enter to skip).", action: "text" },
-        { message: "Processing your input... Please wait.", action: "submit" },
-        { message: "Generating your new resume.", action: "generate" },
+        {message: "Step 1: Please upload your resume file.", action: "file"},
+        {message: "Step 2: Enter the job posting URL.", action: "url"},
+        {message: "Step 3: Add any special considerations (or press Enter to skip).", action: "text"},
+        {message: "Processing your input... Please wait.", action: "submit"},
+        {message: "Generating your new resume.", action: "generate"},
     ];
 
     const outputDiv = document.getElementById("output");
@@ -98,7 +98,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             "Content-Type": "application/json",
                             "X-CSRFToken": getCSRFToken(),
                         },
-                        body: JSON.stringify({ url: input }),
+                        body: JSON.stringify({url: input}),
                     });
 
                     const data = await response.json();
@@ -115,10 +115,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     appendMessage("An error occurred while validating the job posting.");
                 }
             } else if (step.action === "text") {
-                console.log("Text inputed");
-                console.log(input);
                 if (input.trim() === "") {
-                    console.log("No special considerations provided");
                     // Skip validation for empty special considerations
                     appendMessage("No special considerations provided. Skipping this step.");
                     inputs.text = ""; // Assign empty string
@@ -126,7 +123,6 @@ document.addEventListener("DOMContentLoaded", () => {
                     currentStep++;
                     showNextStep();
                 } else {
-                    console.log("Special considerations are provided. Continuing");
                     try {
                         const response = await fetch("/api/validate-special-considerations/", {
                             method: "POST",
@@ -134,7 +130,7 @@ document.addEventListener("DOMContentLoaded", () => {
                                 "Content-Type": "application/json",
                                 "X-CSRFToken": getCSRFToken(),
                             },
-                            body: JSON.stringify({ text: input }),
+                            body: JSON.stringify({text: input}),
                         });
 
                         const data = await response.json();
@@ -201,6 +197,7 @@ document.addEventListener("DOMContentLoaded", () => {
             appendMessage("An error occurred while generating your resume.");
         }
     }
+
 
     function appendMessage(message) {
         const messageDiv = document.createElement("div");

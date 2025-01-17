@@ -10,6 +10,8 @@ from typing import Union, Dict
 openai.api_key = settings.OPENAI_API_KEY
 openai.log = "debug"
 
+openai_model = settings.OPENAI_MODEL
+
 
 # Service functions
 def validate_resume(file: BytesIO, file_type: str) -> Dict[str, Union[bool, str]]:
@@ -23,24 +25,21 @@ def validate_resume(file: BytesIO, file_type: str) -> Dict[str, Union[bool, str]
         # Step 1: Extract text from the file
         file_content = extract_text_from_file(file, file_type)
         if not file_content:
-            print("No text extracted from the file.")
             return {"is_valid": False, "validated_data": ""}
-
-        print(f"Extracted text (first 500 chars): {file_content[:500]}")
 
         # Step 2: Validate the extracted text
         response = openai.chat.completions.create(
-            model="gpt-4",
+            model=openai_model,
             messages=[
                 {"role": "system", "content": "You are an AI assistant for validating resumes."},
                 {"role": "user",
-                 "content": f"Does the following text look like a professional resume?\n\n{file_content[:3000]}\n\nRespond 'yes' or 'no'."},
+                 "content": f"Does the following text look like a person's resume?\n\n{file_content}\n\nRespond 'yes' or 'no'."},
             ],
             temperature=0,
             max_tokens=10,
         )
+
         result = response.choices[0].message.content.strip().lower()
-        print(f"Final validation result: {result}")
         return {"is_valid": result == "yes", "validated_data": file_content if result == "yes" else ""}
     except openai.OpenAIError as e:
         print(f"OpenAI API error: {e}")
@@ -58,7 +57,7 @@ def validate_job_posting(url: str) -> Dict[str, Union[bool, str]]:
     """
     try:
         response = openai.chat.completions.create(
-            model="gpt-4",
+            model=openai_model,
             messages=[
                 {"role": "system", "content": "You are an AI assistant for validating job postings."},
                 {"role": "user",
@@ -68,7 +67,6 @@ def validate_job_posting(url: str) -> Dict[str, Union[bool, str]]:
             max_tokens=10,
         )
         result = response.choices[0].message.content.strip().lower()
-        print(f"Validation response: {result}")
         return {"is_valid": result == "yes", "validated_data": url if result == "yes" else ""}
     except openai.OpenAIError as e:
         print(f"OpenAI API error: {e}")
@@ -86,7 +84,7 @@ def validate_special_considerations(text: str) -> Dict[str, Union[bool, str]]:
     """
     try:
         response = openai.chat.completions.create(
-            model="gpt-4",
+            model=openai_model,
             messages=[
                 {"role": "system", "content": "You are an AI assistant for validating special considerations."},
                 {"role": "user",
@@ -96,7 +94,6 @@ def validate_special_considerations(text: str) -> Dict[str, Union[bool, str]]:
             max_tokens=10,
         )
         result = response.choices[0].message.content.strip().lower()
-        print(f"Validation response for special considerations: {result}")
         return {"is_valid": result == "yes", "validated_data": text if result == "yes" else ""}
     except openai.OpenAIError as e:
         print(f"OpenAI API error: {e}")
@@ -144,37 +141,34 @@ def generate_rewritten_resume(
     try:
         print("Generating rewritten resume prompt...")
         prompt = (
-            "You are a professional resume writer tasked with improving a resume while keeping the original structure and format. "
-            "Your goal is to rewrite the resume so it aligns better with the provided job posting, highlights relevant skills and experience, "
+            "You are a professional resume writer tasked with improving a resume by rewriting bullet points for previous jobs. "
+            "Your goal is to rewrite each job so it aligns better with the provided job posting, highlights relevant skills and experience, "
             "and adheres to professional standards. Follow these instructions:\n\n"
             f"{extra_details}\n\n"
             "Specific Guidelines:\n"
-            "1. Retain all jobs listed in the original resume. Do not remove any job entries.\n"
-            "2. Rewrite descriptions for each job to focus on skills and experiences that align with the job posting. Use action-oriented language.\n"
-            "3. Preserve the overall layout, formatting, fonts, and style of the original resume, ensuring the user can easily modify the styling later.\n"
-            "4. Highlight transferable skills and technologies relevant to the job posting. Add keywords from the job posting where appropriate.\n"
-            "5. Include a professional summary at the top that encapsulates the candidate's qualifications for the target job.\n"
-            "6. Limit the resume to two pages while keeping descriptions detailed and impactful.\n\n"
+            "1. Retain all jobs listed in the original resume. Do not remove any job entries. List the job title and company to specify which job the revisions are for.\n"
+            "2. Rewrite descriptions and bullet points for each job posting to better align with the job posting. Use action-oriented language.\n"
+            "3. Highlight transferable skills and technologies relevant to the job posting. Add keywords from the job posting where appropriate.\n"
+            "4. Limit the suggestions for each job listing to no more than 5 bullet points.\n\n"
+            "5. Do not list individual skills or technologies separately. Instead, incorporate them into the job descriptions.\n\n"
             "Original Resume:\n\n"
             f"{resume_text}\n\n"
             "Job Posting:\n\n"
             f"{job_posting_text}\n\n"
             "Special Considerations (if provided):\n\n"
             f"{considerations if considerations.strip() else 'None'}\n\n"
-            "Output the rewritten resume in a clean, professional format, and ensure it adheres to all the above instructions.\n\n"
-            "Include a footer only if the name 'Randy Hash' is not present in the rewritten resume. The footer should say:\n"
-            "'This resume was generated using Resume Righter, written by Randy Hash. The source code for this project can be found at {link to https://www.github.com/hashr25}'."
+            "Output the suggestions for the resume in a clean, professional format, and ensure it adheres to all the above instructions.\n\n"
+            "Include a footer only if the name \"Randy Hash\" is not present in the resume. The footer should say:\n"
+            "'This resume was generated using Resume Righter, written by Randy Hash. The source code for this project can be found at {insert link to https://github.com/hashr25/ResumeRighter that simple says 'GitHub'}'."
         )
 
-        print("Prompt for resume rewriting:")
-        print(prompt)
-
+        print(f"prompt length: {len(prompt)}")
         # Generate rewritten resume using OpenAI API
         response = openai.chat.completions.create(
-            model="gpt-4",
+            model=openai_model,
             messages=[{"role": "user", "content": prompt}],
             temperature=0.7,
-            max_tokens=3000,
+            max_tokens=4096,
         )
         rewritten_text = response.choices[0].message.content.strip()
 
