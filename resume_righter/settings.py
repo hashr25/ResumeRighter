@@ -131,16 +131,16 @@ TEMPLATE_DIRS = (
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Heroku Settings
-# OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", default="")
-# EXTRA_DETAILS_FOR_RESUME_GENERATION = os.environ.get(
-#     "EXTRA_DETAILS_FOR_RESUME_GENERATION",
-#     default="Make the resume look nice and professional.",
-# )
-# OPENAI_MODEL = os.environ.get("OPENAI_MODEL", default="gpt-3.5-turbo")
+OPENAI_API_KEY = os.environ.get("OPENAI_API_KEY", default="")
+EXTRA_DETAILS_FOR_RESUME_GENERATION = os.environ.get(
+    "EXTRA_DETAILS_FOR_RESUME_GENERATION",
+    default="Make the resume look nice and professional.",
+)
+OPENAI_MODEL = os.environ.get("OPENAI_MODEL", default="gpt-3.5-turbo")
 
 # Local settings
-OPENAI_API_KEY = config("OPENAI_API_KEY", default="")
-EXTRA_DETAILS_FOR_RESUME_GENERATION = config(
-    "EXTRA_DETAILS_FOR_RESUME_GENERATION",
-    default="Make the resume look nice and professional.",)
-OPENAI_MODEL = config("OPENAI_MODEL", default="gpt-3.5-turbo")
+# OPENAI_API_KEY = config("OPENAI_API_KEY", default="")
+# EXTRA_DETAILS_FOR_RESUME_GENERATION = config(
+#     "EXTRA_DETAILS_FOR_RESUME_GENERATION",
+#     default="Make the resume look nice and professional.",)
+# OPENAI_MODEL = config("OPENAI_MODEL", default="gpt-3.5-turbo")

@@ -142,6 +142,7 @@ def generate_rewritten_resume(
         prompt = (
             "Your goal is to make suggestions for each job so it aligns better with the provided job posting, highlights relevant skills and experience, "
             "and adheres to professional standards. Follow these instructions:\n\n"
+            f"{extra_details}\n\n"
             "Specific Guidelines:\n"
             "1. Make suggestions for all jobs listed in the original resume. Do not remove any job entries.\n"
             "2. Rewrite descriptions and bullet points for each job posting to better align with the job posting. Use action-oriented language.\n"
