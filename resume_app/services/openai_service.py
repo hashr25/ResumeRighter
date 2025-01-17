@@ -139,34 +139,35 @@ def generate_rewritten_resume(
     extra_details = settings.EXTRA_DETAILS_FOR_RESUME_GENERATION
 
     try:
-        print("Generating rewritten resume prompt...")
         prompt = (
-            "You are a professional resume writer tasked with improving a resume by rewriting bullet points for previous jobs. "
-            "Your goal is to rewrite each job so it aligns better with the provided job posting, highlights relevant skills and experience, "
+            "Your goal is to make suggestions for each job so it aligns better with the provided job posting, highlights relevant skills and experience, "
             "and adheres to professional standards. Follow these instructions:\n\n"
-            f"{extra_details}\n\n"
             "Specific Guidelines:\n"
-            "1. Retain all jobs listed in the original resume. Do not remove any job entries. List the job title and company to specify which job the revisions are for.\n"
+            "1. Make suggestions for all jobs listed in the original resume. Do not remove any job entries.\n"
             "2. Rewrite descriptions and bullet points for each job posting to better align with the job posting. Use action-oriented language.\n"
             "3. Highlight transferable skills and technologies relevant to the job posting. Add keywords from the job posting where appropriate.\n"
             "4. Limit the suggestions for each job listing to no more than 5 bullet points.\n\n"
             "5. Do not list individual skills or technologies separately. Instead, incorporate them into the job descriptions.\n\n"
+            "6. Do not include personal information, such as name, address, or contact details, in the resume suggestion document.\n\n"
+            "7. Do not include any education or certification information in the resume suggestion document.\n\n"
             "Original Resume:\n\n"
             f"{resume_text}\n\n"
             "Job Posting:\n\n"
             f"{job_posting_text}\n\n"
             "Special Considerations (if provided):\n\n"
             f"{considerations if considerations.strip() else 'None'}\n\n"
-            "Output the suggestions for the resume in a clean, professional format, and ensure it adheres to all the above instructions.\n\n"
+            "Output the suggestions for the resume in a clean format, labeling each job by company name.\n\n"
             "Include a footer only if the name \"Randy Hash\" is not present in the resume. The footer should say:\n"
             "'This resume was generated using Resume Righter, written by Randy Hash. The source code for this project can be found at {insert link to https://github.com/hashr25/ResumeRighter that simple says 'GitHub'}'."
         )
 
-        print(f"prompt length: {len(prompt)}")
         # Generate rewritten resume using OpenAI API
         response = openai.chat.completions.create(
             model=openai_model,
-            messages=[{"role": "user", "content": prompt}],
+            messages=[
+                {"role": "system", "content": "You are a professional resume consultant tasked with improving a resume by rewriting bullet points for previous jobs. "},
+                {"role": "user", "content": prompt}
+            ],
             temperature=0.7,
             max_tokens=4096,
         )
