@@ -12,8 +12,6 @@ https://docs.djangoproject.com/en/5.1/ref/settings/
 import os
 from pathlib import Path
 
-from decouple import config
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -139,6 +137,7 @@ EXTRA_DETAILS_FOR_RESUME_GENERATION = os.environ.get(
 OPENAI_MODEL = os.environ.get("OPENAI_MODEL", default="gpt-3.5-turbo")
 
 # Local settings
+# from decouple import config
 # OPENAI_API_KEY = config("OPENAI_API_KEY", default="")
 # EXTRA_DETAILS_FOR_RESUME_GENERATION = config(
 #     "EXTRA_DETAILS_FOR_RESUME_GENERATION",
